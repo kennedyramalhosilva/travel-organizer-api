@@ -43,8 +43,8 @@ export default function Home() {
           <Text style={styles.welcome}>Minhas Viagens ✈️</Text>
           <Text style={styles.subtitle}>Organize seus roteiros</Text>
         </View>
-        <TouchableOpacity 
-          onPress={() => router.replace('/(auth)/login')} 
+        <TouchableOpacity
+          onPress={() => router.replace('/(auth)/login')}
           style={styles.logoutBtn}
         >
           <Ionicons name="log-out-outline" size={24} color="#FF3B30" />
@@ -59,19 +59,23 @@ export default function Home() {
           <Text style={styles.emptySub}>Que tal planejar a primeira?</Text>
         </View>
       ) : (
-        <FlatList 
+        <FlatList
           data={viagens}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.card}
-              onPress={() => router.push({ pathname: '/details', params: { id: item.id } })}
+              onPress={() => router.push({
+                pathname: "/trip/[id]",
+                params: { id: item.id }
+              })}
+            //onPress={() => router.push({ pathname: '/details', params: { id: item.id } })}
             >
               <View style={styles.cardHeader}>
                 <Text style={styles.cardTitle}>{item.titulo}</Text>
                 <Text style={styles.cardBadge}>{item.tipoTransporte}</Text>
               </View>
-              
+
               <View style={styles.cardBody}>
                 <Text style={styles.cardInfo}>
                   <Ionicons name="cash-outline" size={14} /> Total: R$ {item.valorTotal?.toFixed(2)}
@@ -87,8 +91,8 @@ export default function Home() {
       )}
 
       {/* Botão Flutuante Principal  */}
-      <TouchableOpacity 
-        style={styles.fab} 
+      <TouchableOpacity
+        style={styles.fab}
         onPress={() => router.push('/new-trip')}
       >
         <Ionicons name="add" size={32} color="#fff" />
@@ -99,11 +103,11 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F8F9FA' },
-  header: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    padding: 24, 
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 24,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee'
@@ -140,13 +144,13 @@ const styles = StyleSheet.create({
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
   cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', flex: 1 },
-  cardBadge: { 
-    backgroundColor: '#E7F3FF', 
-    color: '#007AFF', 
-    paddingHorizontal: 8, 
-    paddingVertical: 4, 
-    borderRadius: 8, 
-    fontSize: 10, 
+  cardBadge: {
+    backgroundColor: '#E7F3FF',
+    color: '#007AFF',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    fontSize: 10,
     fontWeight: 'bold',
     overflow: 'hidden'
   },

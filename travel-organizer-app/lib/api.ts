@@ -3,7 +3,7 @@ import axios from 'axios'
 import { getToken } from './token'
 
 export const api = axios.create({
-  baseURL: 'https://shanda-fatidic-rey.ngrok-free.dev',
+  baseURL: 'http://192.168.1.2:3000', 
   timeout: 5000,
 })
 
