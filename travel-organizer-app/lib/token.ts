@@ -14,3 +14,7 @@ export async function getToken() {
 export async function removeToken() {
   await SecureStore.deleteItemAsync(TOKEN_KEY)
 }
+
+export async function deleteToken() {
+  await SecureStore.deleteItemAsync('user-token');
+}
