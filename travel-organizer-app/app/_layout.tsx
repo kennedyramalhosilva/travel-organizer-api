@@ -7,7 +7,7 @@ export default function RootLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    getToken().then(token => {
+    getToken().then((token: string | null) => {
       setIsAuthenticated(!!token)
     })
   }, [])
