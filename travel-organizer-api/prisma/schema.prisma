@@ -22,6 +22,7 @@ model Viagem {
   aluguelCarro       Float?
   enderecoHospedagem String?
   nomeHospedagem     String?
+  custoHospedagem    Float?
   custoCombustivel   Float?
   valorTotal         Float?
   createdAt          DateTime @default(now())

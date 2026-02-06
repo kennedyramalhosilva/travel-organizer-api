@@ -18,6 +18,7 @@ export class ViagemService {
             valorPassagem: dto.valorPassagem,
             pedagio: dto.pedagio,
             aluguelCarro: dto.aluguelCarro,
+            custoHospedagem: dto.custoHospedagem,
             custoCombustivel,
         })
 
@@ -61,6 +62,14 @@ export class ViagemService {
             throw new NotFoundException('Viagem não encontrada')
         }
 
+        //apaga todos pontos turísticos para depois criar os novos, caso haja durante a edição
+        await this.prisma.pontoTuristico.deleteMany({
+            where: { 
+            viagemId: id,
+            viagem: { userId } 
+            },
+        });
+
         const custoCombustivel = this.calcularCustoCombustivel(
             dto.km ?? (viagemAtual.km ?? undefined),
             dto.autonomia ?? (viagemAtual.autonomia ?? undefined),
@@ -71,6 +80,7 @@ export class ViagemService {
             valorPassagem: dto.valorPassagem ?? (viagemAtual.valorPassagem ?? undefined),
             pedagio: dto.pedagio ?? (viagemAtual.pedagio ?? undefined),
             aluguelCarro: dto.aluguelCarro ?? (viagemAtual.aluguelCarro ?? undefined),
+            custoHospedagem: dto.custoHospedagem ?? (viagemAtual.custoHospedagem ?? undefined),
             custoCombustivel,
         })
 
@@ -100,20 +110,26 @@ export class ViagemService {
         }
 
         const litros = km / autonomia
-        return litros * valorGasolina
+        return this.arredondar(litros * valorGasolina)
     }
 
     private calcularTotal(data: {
         valorPassagem?: number
         pedagio?: number
         aluguelCarro?: number
+        custoHospedagem?: number
         custoCombustivel?: number
     }): number {
-        return (
+        return this.arredondar((
             (data.valorPassagem ?? 0) +
             (data.pedagio ?? 0) +
             (data.aluguelCarro ?? 0) +
+            (data.custoHospedagem ?? 0) +
             (data.custoCombustivel ?? 0)
-        )
+        ))
+    }
+
+    private arredondar(valor: number): number {
+        return Math.round(valor * 100) / 100;
     }
 }

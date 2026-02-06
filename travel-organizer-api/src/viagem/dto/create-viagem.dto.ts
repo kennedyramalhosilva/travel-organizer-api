@@ -67,5 +67,10 @@ export class CreateViagemDto {
     @IsOptional()
     @IsNumber()
     @Min(0)
+    custoHospedagem?: number
+
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
     valorGasolina?: number
 }
