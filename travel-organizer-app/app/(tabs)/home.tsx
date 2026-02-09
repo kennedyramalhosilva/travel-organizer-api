@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
 import { api } from 'lib/api'; // Sua instância do Axios
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { removeToken } from '@/lib/token';
 
 interface Viagem {
   id: number;
@@ -16,6 +17,7 @@ interface Viagem {
 export default function Home() {
   const [viagens, setViagens] = useState<Viagem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState(''); 
 
   // Função para buscar as viagens do usuário logado
   async function fetchViagens() {
@@ -31,9 +33,26 @@ export default function Home() {
     }
   }
 
+  async function handleLogout() {
+    try {
+      await removeToken(); // Apaga o token
+      router.replace('/(auth)/login'); // Manda pro login
+    } catch (error) {
+      console.log("Erro ao sair", error);
+    }
+  }
+
   useEffect(() => {
     fetchViagens();
   }, []);
+
+  const filteredViagens = viagens.filter((item) => {
+    const termo = search.toLowerCase();
+    return (
+      item.titulo.toLowerCase().includes(termo) ||
+      (item.trajeto && item.trajeto.toLowerCase().includes(termo))
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,11 +63,27 @@ export default function Home() {
           <Text style={styles.subtitle}>Organize seus roteiros</Text>
         </View>
         <TouchableOpacity
-          onPress={() => router.replace('/(auth)/login')}
+          onPress={handleLogout}
           style={styles.logoutBtn}
         >
           <Ionicons name="log-out-outline" size={24} color="#FF3B30" />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#888" style={{ marginRight: 8 }} />
+        <TextInput 
+          placeholder="Buscar viagem..."
+          placeholderTextColor="#999"
+          style={styles.searchInput}
+          value={search}
+          onChangeText={setSearch}
+        />
+        {search.length > 0 && (
+          <TouchableOpacity onPress={() => setSearch('')}>
+            <Ionicons name="close-circle" size={20} color="#ccc" />
+          </TouchableOpacity>
+        )}
       </View>
 
       {loading ? (
@@ -60,7 +95,7 @@ export default function Home() {
         </View>
       ) : (
         <FlatList
-          data={viagens}
+          data={filteredViagens}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -115,6 +150,29 @@ const styles = StyleSheet.create({
   welcome: { fontSize: 22, fontWeight: 'bold', color: '#1A1A1A' },
   subtitle: { fontSize: 14, color: '#666' },
   logoutBtn: { padding: 8 },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    marginTop: 10,
+    paddingHorizontal: 15,
+    height: 50,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E9ECEF',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+    height: '100%',
+  },
   emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 },
   emptyText: { fontSize: 18, fontWeight: 'bold', color: '#666', textAlign: 'center' },
   emptySub: { fontSize: 14, color: '#999', marginTop: 8 },

@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { api } from 'lib/api';
+import { removeToken } from '@/lib/token';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
@@ -26,13 +27,22 @@ export default function ProfileScreen() {
     loadUserData();
   }, []);
 
-  function handleLogout() {
+    async function handleLogout() {
+      try {
+        await removeToken(); 
+        router.replace('/(auth)/login'); 
+      } catch (error) {
+        console.log("Erro ao sair", error);
+      }
+    }
+
+  function alertHandleLogout() {
     Alert.alert('Sair', 'Deseja realmente sair da sua conta?', [
       { text: 'Cancelar', style: 'cancel' },
       { 
         text: 'Sair', 
         style: 'destructive',
-        onPress: () => router.replace('/(auth)/login') 
+        onPress: () => handleLogout() 
       },
     ]);
   }
@@ -67,7 +77,7 @@ export default function ProfileScreen() {
           <Ionicons name="chevron-forward" size={18} color="#ccc" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuItem, { borderBottomWidth: 0 }]} onPress={handleLogout}>
+        <TouchableOpacity style={[styles.menuItem, { borderBottomWidth: 0 }]} onPress={alertHandleLogout}>
           <Ionicons name="log-out-outline" size={22} color="#FF3B30" />
           <Text style={[styles.menuText, { color: '#FF3B30' }]}>Sair do Aplicativo</Text>
         </TouchableOpacity>

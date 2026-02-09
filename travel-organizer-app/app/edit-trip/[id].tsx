@@ -137,7 +137,7 @@ export default function EditTrip() {
       }
       
       Alert.alert("Sucesso", "Viagem atualizada com sucesso! 🔄");
-      router.replace('/(tabs)');
+      router.replace('/home');
     } catch (error: any) {
       console.error(error);
       Alert.alert('Erro', 'Não foi possível atualizar a viagem.');
@@ -295,6 +295,7 @@ export default function EditTrip() {
           <View style={styles.modalContent}>
             <Text style={styles.sectionTitle}>Novo Passeio</Text>
             <TextInput style={styles.input} placeholder="Nome do local" value={novoPonto.nome} onChangeText={t => setNovoPonto({...novoPonto, nome: t})} />
+            <TextInput style={styles.input} placeholder="Descrição (opcional)" value={novoPonto.descricao} onChangeText={t => setNovoPonto({...novoPonto, descricao: t})} />
             <TextInput style={styles.input} placeholder="Custo (R$)" keyboardType="numeric" value={novoPonto.custoEstimado} onChangeText={t => setNovoPonto({...novoPonto, custoEstimado: t})} />
             <TouchableOpacity style={styles.btnFinal} onPress={() => {
               setPontos([...pontos, novoPonto]);

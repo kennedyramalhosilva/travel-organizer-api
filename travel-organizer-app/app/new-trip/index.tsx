@@ -119,7 +119,7 @@ export default function NewTrip() {
       }
 
       Alert.alert("Sucesso", "Viagem salva! Boa viagem! ✈️");
-      router.replace('/(tabs)');
+      router.replace('/home');
       
     } catch (error: any) {
       console.error("ERRO COMPLETO:", error);
@@ -257,6 +257,7 @@ export default function NewTrip() {
           <View style={styles.modalContent}>
             <Text style={styles.sectionTitle}>Novo Passeio</Text>
             <TextInput style={styles.input} placeholder="Nome do local" value={novoPonto.nome} onChangeText={t => setNovoPonto({...novoPonto, nome: t})} />
+            <TextInput style={styles.input} placeholder="Descrição (opcional)" value={novoPonto.descricao} onChangeText={t => setNovoPonto({...novoPonto, descricao: t})} />
             <TextInput style={styles.input} placeholder="Custo (R$)" keyboardType="numeric" value={novoPonto.custoEstimado} onChangeText={t => setNovoPonto({...novoPonto, custoEstimado: t})} />
             <TouchableOpacity style={styles.btnFinal} onPress={() => {
               setPontos([...pontos, novoPonto]);
